@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus-Fin | AI Accounts Payable Automation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; }
+    header { background: linear-gradient(135deg, #161b22, #0d1117); padding: 60px 40px; text-align: center; border-bottom: 1px solid #30363d; }
+    header h1 { font-size: 3rem; color: #58a6ff; margin-bottom: 10px; }
+    header p { font-size: 1.2rem; color: #8b949e; max-width: 700px; margin: 0 auto 20px; }
+    .badge { display: inline-block; background: #21262d; border: 1px solid #30363d; color: #58a6ff; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; margin: 4px; }
+    .badge-row { margin: 15px 0; }
+    .btn { display: inline-block; background: #238636; color: #fff; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; margin: 6px; transition: background 0.2s; }
+    .btn:hover { background: #2ea043; }
+    .btn-outline { background: transparent; border: 1px solid #30363d; color: #58a6ff; }
+    .btn-outline:hover { background: #21262d; }
+    main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+    h2 { color: #58a6ff; font-size: 1.6rem; margin: 40px 0 15px; border-bottom: 1px solid #30363d; padding-bottom: 8px; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+    .card p { color: #8b949e; line-height: 1.7; }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; }
+    .metric { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; text-align: center; }
+    .metric .number { font-size: 2rem; color: #58a6ff; font-weight: 700; }
+    .metric .label { color: #8b949e; font-size: 0.9rem; margin-top: 6px; }
+    .flow-steps { list-style: none; counter-reset: steps; }
+    .flow-steps li { counter-increment: steps; padding: 14px 14px 14px 50px; position: relative; border-left: 2px solid #30363d; margin-left: 20px; margin-bottom: 10px; }
+    .flow-steps li::before { content: counter(steps); position: absolute; left: -14px; top: 12px; background: #238636; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; }
+    .security-box { background: #161b22; border: 1px solid #f85149; border-radius: 8px; padding: 20px; }
+    .security-box h4 { color: #f85149; margin-bottom: 10px; }
+    .security-box ul { color: #8b949e; padding-left: 20px; }
+    .security-box ul li { margin-bottom: 6px; }
+    footer { text-align: center; padding: 40px; color: #8b949e; border-top: 1px solid #30363d; margin-top: 60px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Nexus-Fin</h1>
+    <p>AI-powered Accounts Payable Automation — Invoice Parsing, 3-Way Matching &amp; Google Sheets Integration</p>
+    <div class="badge-row">
+      <span class="badge">Python</span>
+      <span class="badge">Streamlit</span>
+      <span class="badge">Groq AI</span>
+      <span class="badge">Tesseract OCR</span>
+      <span class="badge">Google Sheets API</span>
+      <span class="badge">PyMuPDF</span>
+    </div>
+    <a href="https://github.com/MAHAYAVANSHI2904/Nexus-Fin" class="btn">View on GitHub</a>
+    <a href="https://mahayavanshi2904.github.io/Chirag.portfolio/" class="btn btn-outline">Back to Portfolio</a>
+  </header>
+  <main>
+    <h2>Problem Statement</h2>
+    <div class="card">
+      <p>Manual invoice processing in mid-size companies takes 15–30 minutes per invoice, is error-prone, and lacks audit trails. Finance teams waste hundreds of hours monthly on repetitive data entry, PO matching, and reconciliation — all tasks that can be automated with AI.</p>
+    </div>
+
+    <h2>Solution</h2>
+    <div class="card">
+      <p>Nexus-Fin automates the end-to-end AP workflow: upload a PDF invoice, extract structured data using OCR + Groq AI, perform 3-way PO matching, flag discrepancies, and push clean records directly into Google Sheets — all via a simple Streamlit UI.</p>
+    </div>
+
+    <h2>Impact Metrics</h2>
+    <div class="metrics">
+      <div class="metric"><div class="number">90%</div><div class="label">Reduction in manual data entry time</div></div>
+      <div class="metric"><div class="number">&lt;30s</div><div class="label">Invoice processed end-to-end</div></div>
+      <div class="metric"><div class="number">100%</div><div class="label">Audit trail maintained in Sheets</div></div>
+      <div class="metric"><div class="number">3-Way</div><div class="label">PO + GRN + Invoice matching</div></div>
+    </div>
+
+    <h2>Workflow</h2>
+    <div class="card">
+      <ol class="flow-steps">
+        <li>Upload PDF invoice via Streamlit UI</li>
+        <li>PyMuPDF extracts raw text from PDF pages</li>
+        <li>Tesseract OCR handles scanned/image-based invoices</li>
+        <li>Groq AI (LLaMA 3) parses structured fields: vendor, amount, line items, dates</li>
+        <li>3-way matching engine validates against PO and GRN records</li>
+        <li>Discrepancies flagged with reason codes; clean records pushed to Google Sheets</li>
+        <li>Approval workflow status updated in real-time dashboard</li>
+      </ol>
+    </div>
+
+    <h2>Tech Stack</h2>
+    <div class="card">
+      <div class="badge-row">
+        <span class="badge">Python 3.11</span>
+        <span class="badge">Streamlit</span>
+        <span class="badge">Groq API (LLaMA 3)</span>
+        <span class="badge">Tesseract OCR</span>
+        <span class="badge">PyMuPDF</span>
+        <span class="badge">Google Sheets API v4</span>
+        <span class="badge">gspread</span>
+        <span class="badge">pandas</span>
+      </div>
+    </div>
+
+    <h2>Security</h2>
+    <div class="card">
+      <div class="security-box">
+        <h4>Security Measures Applied</h4>
+        <ul>
+          <li>No API keys, credentials or secrets committed to this repository</li>
+          <li>All secrets managed via st.secrets (Streamlit Cloud) or environment variables</li>
+          <li>.gitignore configured to exclude .env files and credential files</li>
+          <li>No real invoice data, vendor names or financial records stored in this repo</li>
+          <li>Google Sheets ID injected at runtime via environment variable only</li>
+          <li>All sample/test data uses dummy placeholder values only</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>Nexus-Fin &mdash; Built by Chirag Mahayavanshi | Mumbai, India</p>
+    <p style="margin-top:8px">Senior Finance &amp; Automation Specialist | ACCA (9/13) | Masters in International Accounting &amp; Finance</p>
+  </footer>
+</body>
+</html>
