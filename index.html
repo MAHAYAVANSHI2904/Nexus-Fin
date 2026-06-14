@@ -1,118 +1,669 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nexus-Fin | AI Accounts Payable Automation</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; }
-    header { background: linear-gradient(135deg, #161b22, #0d1117); padding: 60px 40px; text-align: center; border-bottom: 1px solid #30363d; }
-    header h1 { font-size: 3rem; color: #58a6ff; margin-bottom: 10px; }
-    header p { font-size: 1.2rem; color: #8b949e; max-width: 700px; margin: 0 auto 20px; }
-    .badge { display: inline-block; background: #21262d; border: 1px solid #30363d; color: #58a6ff; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; margin: 4px; }
-    .badge-row { margin: 15px 0; }
-    .btn { display: inline-block; background: #238636; color: #fff; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; margin: 6px; transition: background 0.2s; }
-    .btn:hover { background: #2ea043; }
-    .btn-outline { background: transparent; border: 1px solid #30363d; color: #58a6ff; }
-    .btn-outline:hover { background: #21262d; }
-    main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-    h2 { color: #58a6ff; font-size: 1.6rem; margin: 40px 0 15px; border-bottom: 1px solid #30363d; padding-bottom: 8px; }
-    .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
-    .card p { color: #8b949e; line-height: 1.7; }
-    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; }
-    .metric { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; text-align: center; }
-    .metric .number { font-size: 2rem; color: #58a6ff; font-weight: 700; }
-    .metric .label { color: #8b949e; font-size: 0.9rem; margin-top: 6px; }
-    .flow-steps { list-style: none; counter-reset: steps; }
-    .flow-steps li { counter-increment: steps; padding: 14px 14px 14px 50px; position: relative; border-left: 2px solid #30363d; margin-left: 20px; margin-bottom: 10px; }
-    .flow-steps li::before { content: counter(steps); position: absolute; left: -14px; top: 12px; background: #238636; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; }
-    .security-box { background: #161b22; border: 1px solid #f85149; border-radius: 8px; padding: 20px; }
-    .security-box h4 { color: #f85149; margin-bottom: 10px; }
-    .security-box ul { color: #8b949e; padding-left: 20px; }
-    .security-box ul li { margin-bottom: 6px; }
-    footer { text-align: center; padding: 40px; color: #8b949e; border-top: 1px solid #30363d; margin-top: 60px; font-size: 0.9rem; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Nexus-Fin — Personal Finance Wealth Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080a0e;
+  --surface: #0e1117;
+  --surface-2: #141820;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --text: #e8eaf0;
+  --text-muted: rgba(232,234,240,0.4);
+  --text-dim: rgba(232,234,240,0.22);
+  --accent: #93c5fd;
+  --accent-dim: rgba(147,197,253,0.08);
+  --accent-border: rgba(147,197,253,0.2);
+  --serif: 'Instrument Serif', serif;
+  --sans: 'Inter', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 56px;
+  background: rgba(8,10,14,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-mark {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-logo-mark svg { width: 14px; height: 14px; }
+.nav-logo-name { font-size: 13px; font-weight: 500; color: var(--text); letter-spacing: -0.2px; }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  font-size: 12px; color: var(--text-muted); text-decoration: none;
+  letter-spacing: 0.4px; text-transform: uppercase; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  font-size: 12px; font-weight: 500; color: var(--bg) !important;
+  background: var(--accent); padding: 7px 16px; border-radius: 6px;
+  text-transform: none !important; letter-spacing: 0 !important;
+  transition: opacity 0.2s !important;
+}
+.nav-cta:hover { opacity: 0.85; color: var(--bg) !important; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 24px 80px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(147,197,253,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-dim); border: 1px solid var(--accent-border);
+  padding: 6px 14px; border-radius: 100px; margin-bottom: 32px;
+}
+.hero-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.hero h1 {
+  font-family: var(--serif); font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 400;
+  line-height: 1.05; letter-spacing: -1px; color: var(--text); max-width: 800px; margin-bottom: 24px;
+}
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub {
+  font-size: 17px; color: var(--text-muted); max-width: 540px;
+  line-height: 1.7; font-weight: 300; margin-bottom: 48px;
+}
+.hero-actions {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  justify-content: center; margin-bottom: 72px;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500;
+  color: var(--bg); background: var(--accent); padding: 11px 24px; border-radius: 8px;
+  text-decoration: none; transition: opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 400;
+  color: var(--text-muted); background: transparent; border: 1px solid var(--border);
+  padding: 11px 24px; border-radius: 8px; text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--border-hover); color: var(--text); }
+
+/* ── KPI STRIP ── */
+.kpi-strip {
+  display: flex; align-items: center; gap: 0; border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; background: var(--surface);
+}
+.kpi-item { padding: 20px 32px; text-align: center; flex: 1; border-right: 1px solid var(--border); }
+.kpi-item:last-child { border-right: none; }
+.kpi-num { font-family: var(--serif); font-size: 2.2rem; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+.kpi-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.3px; }
+
+/* ── SECTIONS ── */
+.section { max-width: 960px; margin: 0 auto; padding: 100px 24px; }
+.section-label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+.section-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; line-height: 1.1; color: var(--text); margin-bottom: 16px; }
+.section-title em { font-style: italic; color: var(--text-muted); }
+.section-body { font-size: 16px; color: var(--text-muted); max-width: 620px; line-height: 1.75; font-weight: 300; }
+.divider { height: 1px; background: var(--border); margin: 0 24px; }
+
+/* ── FEATURE GRID ── */
+.feature-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--border); border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; margin-top: 56px;
+}
+.feature-card { background: var(--surface); padding: 32px 28px; transition: background 0.2s; }
+.feature-card:hover { background: var(--surface-2); }
+.feature-icon {
+  width: 36px; height: 36px; border-radius: 8px; background: var(--accent-dim);
+  border: 1px solid var(--accent-border); display: flex; align-items: center;
+  justify-content: center; margin-bottom: 16px; font-size: 16px;
+}
+.feature-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.feature-body { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+/* ── ARCHITECTURE ── */
+.arch-flow { margin-top: 56px; display: flex; flex-direction: column; gap: 0; }
+.arch-step { display: grid; grid-template-columns: 48px 1fr; gap: 24px; position: relative; }
+.arch-step:not(:last-child)::after {
+  content: ''; position: absolute; left: 23px; top: 48px; bottom: -32px; width: 1px; background: var(--border);
+}
+.arch-step + .arch-step { margin-top: 32px; }
+.arch-num {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--surface);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 12px; color: var(--text-muted); flex-shrink: 0;
+  position: relative; z-index: 1;
+}
+.arch-content { padding-top: 12px; }
+.arch-content h4 { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+.arch-content p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+/* ── DATA MODEL TABLE ── */
+.model-table { margin-top: 56px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.model-row {
+  display: grid; grid-template-columns: 140px 1fr 2fr; gap: 0;
+  border-bottom: 1px solid var(--border); transition: background 0.15s;
+}
+.model-row:last-child { border-bottom: none; }
+.model-row:hover { background: var(--surface-2); }
+.model-row.header { background: var(--surface); }
+.mr-cell { padding: 14px 20px; font-size: 13px; border-right: 1px solid var(--border); display: flex; align-items: center; }
+.mr-cell:last-child { border-right: none; }
+.mr-entity { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+.mr-field { font-weight: 500; color: var(--text); }
+.mr-desc { color: var(--text-muted); }
+.model-row.header .mr-cell { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-dim); }
+
+/* ── TECH STACK ── */
+.stack-grid { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stack-item {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 20px 16px; text-align: center; transition: border-color 0.2s, transform 0.2s;
+}
+.stack-item:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.stack-item-icon { font-size: 22px; margin-bottom: 8px; }
+.stack-item-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.stack-item-role { font-size: 11px; color: var(--text-dim); }
+
+/* ── SETUP ── */
+.code-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 16px; }
+.code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+.code-label { font-size: 11px; color: var(--text-dim); font-family: var(--mono); }
+.code-lang { font-size: 10px; color: var(--text-dim); background: var(--surface-2); padding: 3px 8px; border-radius: 4px; font-family: var(--mono); }
+pre { padding: 20px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: rgba(232,234,240,0.7); }
+.setup-steps { margin-top: 40px; display: flex; flex-direction: column; gap: 32px; }
+.setup-step-label { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; }
+.setup-step-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.setup-step-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+
+/* ── SECURITY ── */
+.security-grid { margin-top: 56px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.security-item { display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.security-icon {
+  width: 32px; height: 32px; border-radius: 6px; background: rgba(147,197,253,0.06);
+  border: 1px solid rgba(147,197,253,0.15); display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; font-size: 14px;
+}
+.security-text h4 { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.security-text p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── ROADMAP ── */
+.roadmap-list { margin-top: 56px; display: flex; flex-direction: column; gap: 12px; }
+.roadmap-item {
+  display: flex; align-items: center; gap: 14px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px;
+}
+.roadmap-checkbox {
+  width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.roadmap-text { font-size: 13px; color: var(--text-muted); }
+
+/* ── AUTHOR ── */
+.author-card {
+  margin-top: 56px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 48px; display: grid; grid-template-columns: 1fr auto;
+  gap: 40px; align-items: center;
+}
+.author-label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.author-name { font-family: var(--serif); font-size: 2rem; font-weight: 400; color: var(--text); margin-bottom: 8px; }
+.author-title { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+.author-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.author-link {
+  font-size: 12px; color: var(--text-muted); text-decoration: none; border: 1px solid var(--border);
+  padding: 7px 14px; border-radius: 6px; transition: border-color 0.2s, color 0.2s;
+}
+.author-link:hover { border-color: var(--border-hover); color: var(--text); }
+.author-badge { display: flex; flex-direction: column; gap: 8px; }
+.ab-item {
+  font-size: 11px; color: var(--text-dim); background: var(--surface-2); border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 6px; font-family: var(--mono); white-space: nowrap;
+}
+
+footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-dim); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .kpi-strip { flex-direction: column; }
+  .kpi-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .kpi-item:last-child { border-bottom: none; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .stack-grid { grid-template-columns: repeat(2, 1fr); }
+  .security-grid { grid-template-columns: 1fr; }
+  .author-card { grid-template-columns: 1fr; }
+  .model-row { grid-template-columns: 1fr; }
+  .mr-cell { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+.c-green { color: #6ee7b7; }
+.c-blue  { color: #93c5fd; }
+.c-amber { color: #fbbf24; }
+.c-dim   { color: rgba(232,234,240,0.3); }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Nexus-Fin</h1>
-    <p>AI-powered Accounts Payable Automation — Invoice Parsing, 3-Way Matching &amp; Google Sheets Integration</p>
-    <div class="badge-row">
-      <span class="badge">Python</span>
-      <span class="badge">Streamlit</span>
-      <span class="badge">Groq AI</span>
-      <span class="badge">Tesseract OCR</span>
-      <span class="badge">Google Sheets API</span>
-      <span class="badge">PyMuPDF</span>
-    </div>
-    <a href="https://github.com/MAHAYAVANSHI2904/Nexus-Fin" class="btn">View on GitHub</a>
-    <a href="https://mahayavanshi2904.github.io/Chirag.portfolio/" class="btn btn-outline">Back to Portfolio</a>
-  </header>
-  <main>
-    <h2>Problem Statement</h2>
-    <div class="card">
-      <p>Manual invoice processing in mid-size companies takes 15–30 minutes per invoice, is error-prone, and lacks audit trails. Finance teams waste hundreds of hours monthly on repetitive data entry, PO matching, and reconciliation — all tasks that can be automated with AI.</p>
-    </div>
 
-    <h2>Solution</h2>
-    <div class="card">
-      <p>Nexus-Fin automates the end-to-end AP workflow: upload a PDF invoice, extract structured data using OCR + Groq AI, perform 3-way PO matching, flag discrepancies, and push clean records directly into Google Sheets — all via a simple Streamlit UI.</p>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="9" rx="1"/>
+        <rect x="14" y="3" width="7" height="5" rx="1"/>
+        <rect x="14" y="12" width="7" height="9" rx="1"/>
+        <rect x="3" y="16" width="7" height="5" rx="1"/>
+      </svg>
     </div>
+    <span class="nav-logo-name">Nexus-Fin</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#setup">Setup</a>
+    <a href="https://github.com/MAHAYAVANSHI2904/Nexus-Fin" target="_blank" class="nav-cta">GitHub →</a>
+  </div>
+</nav>
 
-    <h2>Impact Metrics</h2>
-    <div class="metrics">
-      <div class="metric"><div class="number">90%</div><div class="label">Reduction in manual data entry time</div></div>
-      <div class="metric"><div class="number">&lt;30s</div><div class="label">Invoice processed end-to-end</div></div>
-      <div class="metric"><div class="number">100%</div><div class="label">Audit trail maintained in Sheets</div></div>
-      <div class="metric"><div class="number">3-Way</div><div class="label">PO + GRN + Invoice matching</div></div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="hero-eyebrow-dot"></span>
+    No backend · No signup · Your data never leaves your browser
+  </div>
+  <h1>See your wealth<br><em>10 years</em> from now.</h1>
+  <p class="hero-sub">Nexus-Fin maps your income, expenses, and investments to a 10-year net worth curve — with AI-powered spend analysis and goal tracking, running entirely in your browser.</p>
+  <div class="hero-actions">
+    <a href="https://github.com/MAHAYAVANSHI2904/Nexus-Fin" target="_blank" class="btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      View on GitHub
+    </a>
+    <a href="https://mahayavanshi2904.github.io/Chirag.portfolio/" target="_blank" class="btn-ghost">← Back to Portfolio</a>
+  </div>
+  <div class="kpi-strip reveal">
+    <div class="kpi-item">
+      <div class="kpi-num">10yr</div>
+      <div class="kpi-label">Wealth projection horizon</div>
     </div>
-
-    <h2>Workflow</h2>
-    <div class="card">
-      <ol class="flow-steps">
-        <li>Upload PDF invoice via Streamlit UI</li>
-        <li>PyMuPDF extracts raw text from PDF pages</li>
-        <li>Tesseract OCR handles scanned/image-based invoices</li>
-        <li>Groq AI (LLaMA 3) parses structured fields: vendor, amount, line items, dates</li>
-        <li>3-way matching engine validates against PO and GRN records</li>
-        <li>Discrepancies flagged with reason codes; clean records pushed to Google Sheets</li>
-        <li>Approval workflow status updated in real-time dashboard</li>
-      </ol>
+    <div class="kpi-item">
+      <div class="kpi-num">0</div>
+      <div class="kpi-label">Servers — runs fully client-side</div>
     </div>
+    <div class="kpi-item">
+      <div class="kpi-num">4</div>
+      <div class="kpi-label">Asset classes tracked</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-num">100%</div>
+      <div class="kpi-label">Data stays in your browser</div>
+    </div>
+  </div>
+</section>
 
-    <h2>Tech Stack</h2>
-    <div class="card">
-      <div class="badge-row">
-        <span class="badge">Python 3.11</span>
-        <span class="badge">Streamlit</span>
-        <span class="badge">Groq API (LLaMA 3)</span>
-        <span class="badge">Tesseract OCR</span>
-        <span class="badge">PyMuPDF</span>
-        <span class="badge">Google Sheets API v4</span>
-        <span class="badge">gspread</span>
-        <span class="badge">pandas</span>
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <p class="section-label reveal">Features</p>
+  <h2 class="section-title reveal">Built for people<br>who <em>plan ahead.</em></h2>
+  <p class="section-body reveal">Most budgeting apps show where your money went. Nexus-Fin shows where it's headed.</p>
+
+  <div class="feature-grid reveal">
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <div class="feature-title">10-Year Wealth Projection</div>
+      <div class="feature-body">Compound growth modeling based on income growth, expense inflation, and investment returns. Best/base/worst case sensitivity curves.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-title">Goal Tracking</div>
+      <div class="feature-body">Set milestones — emergency fund, home down payment, retirement corpus — and see exactly when you'll hit them based on current behavior.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">Spend Anomaly Detection</div>
+      <div class="feature-body">AI flags categories trending above your 3-month average. Catch lifestyle creep before it derails your plan.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💼</div>
+      <div class="feature-title">Multi-Asset Portfolio</div>
+      <div class="feature-body">Track Equity, Debt, Gold, and Real Estate in one view. XIRR-based returns per asset class with allocation heatmap vs target.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <div class="feature-title">SIP Tracker</div>
+      <div class="feature-body">Monthly SIP inputs auto-roll into your projection. See maturity value at any future date instantly.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Savings Rate Benchmark</div>
+      <div class="feature-body">Calculates your savings rate and compares against the 50/30/20 rule — know exactly where you stand.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ARCHITECTURE -->
+<section class="section" id="architecture">
+  <p class="section-label reveal">How It Works</p>
+  <h2 class="section-title reveal">From input<br>to <em>insight.</em></h2>
+
+  <div class="arch-flow reveal">
+    <div class="arch-step">
+      <div class="arch-num">01</div>
+      <div class="arch-content">
+        <h4>Enter Your Numbers</h4>
+        <p>Add income sources, recurring expenses by category, current investments, and financial goals. Everything is stored locally — nothing is sent anywhere.</p>
       </div>
     </div>
-
-    <h2>Security</h2>
-    <div class="card">
-      <div class="security-box">
-        <h4>Security Measures Applied</h4>
-        <ul>
-          <li>No API keys, credentials or secrets committed to this repository</li>
-          <li>All secrets managed via st.secrets (Streamlit Cloud) or environment variables</li>
-          <li>.gitignore configured to exclude .env files and credential files</li>
-          <li>No real invoice data, vendor names or financial records stored in this repo</li>
-          <li>Google Sheets ID injected at runtime via environment variable only</li>
-          <li>All sample/test data uses dummy placeholder values only</li>
-        </ul>
+    <div class="arch-step">
+      <div class="arch-num">02</div>
+      <div class="arch-content">
+        <h4>Projection Engine Runs</h4>
+        <p>Monthly surplus (income − expenses) is calculated, then compounded forward at your chosen investment return rate. Income growth and inflation are applied year over year.</p>
       </div>
     </div>
-  </main>
-  <footer>
-    <p>Nexus-Fin &mdash; Built by Chirag Mahayavanshi | Mumbai, India</p>
-    <p style="margin-top:8px">Senior Finance &amp; Automation Specialist | ACCA (9/13) | Masters in International Accounting &amp; Finance</p>
-  </footer>
+    <div class="arch-step">
+      <div class="arch-num">03</div>
+      <div class="arch-content">
+        <h4>Goal Gap Analysis</h4>
+        <p>For each goal, the engine compares your projected portfolio value at the target date against the target amount — showing exactly how much more (or less) you need.</p>
+      </div>
+    </div>
+    <div class="arch-step">
+      <div class="arch-num">04</div>
+      <div class="arch-content">
+        <h4>Visual Dashboard</h4>
+        <p>Net worth curve, category-wise expense waterfall, and goal progress rings render via Chart.js — updating live as you adjust any input.</p>
+      </div>
+    </div>
+    <div class="arch-step">
+      <div class="arch-num">05</div>
+      <div class="arch-content">
+        <h4>Optional AI Insights</h4>
+        <p>If enabled, anonymized spend category data is sent to Claude API for anomaly detection and personalized suggestions — never raw transaction details.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DATA MODEL -->
+<section class="section">
+  <p class="section-label reveal">Data Model</p>
+  <h2 class="section-title reveal">The schema<br>behind the <em>numbers.</em></h2>
+
+  <div class="model-table reveal">
+    <div class="model-row header">
+      <div class="mr-cell"><span>Entity</span></div>
+      <div class="mr-cell"><span>Key Fields</span></div>
+      <div class="mr-cell"><span>Purpose</span></div>
+    </div>
+    <div class="model-row">
+      <div class="mr-cell"><span class="mr-entity">income[]</span></div>
+      <div class="mr-cell"><span class="mr-field">source, amount, frequency, growth_rate</span></div>
+      <div class="mr-cell"><span class="mr-desc">Models salary increments and side income separately for accurate forecasting</span></div>
+    </div>
+    <div class="model-row">
+      <div class="mr-cell"><span class="mr-entity">expenses[]</span></div>
+      <div class="mr-cell"><span class="mr-field">category, amount, is_essential</span></div>
+      <div class="mr-cell"><span class="mr-desc">Splits essential vs discretionary spend — drives the savings rate benchmark</span></div>
+    </div>
+    <div class="model-row">
+      <div class="mr-cell"><span class="mr-entity">investments[]</span></div>
+      <div class="mr-cell"><span class="mr-field">asset_type, current_value, monthly_sip, expected_return</span></div>
+      <div class="mr-cell"><span class="mr-desc">Powers the multi-asset portfolio view and XIRR calculations</span></div>
+    </div>
+    <div class="model-row">
+      <div class="mr-cell"><span class="mr-entity">goals[]</span></div>
+      <div class="mr-cell"><span class="mr-field">target_amount, target_date, linked_investment_ids</span></div>
+      <div class="mr-cell"><span class="mr-desc">Links specific investments to specific life goals for gap analysis</span></div>
+    </div>
+    <div class="model-row">
+      <div class="mr-cell"><span class="mr-entity">settings</span></div>
+      <div class="mr-cell"><span class="mr-field">inflation_rate, risk_profile, salary_growth_rate</span></div>
+      <div class="mr-cell"><span class="mr-desc">Global assumptions applied across the entire projection engine</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TECH STACK -->
+<section class="section">
+  <p class="section-label reveal">Stack</p>
+  <h2 class="section-title reveal">Zero <em>dependencies.</em></h2>
+  <p class="section-body reveal">One HTML file. No build step. No <code style="font-family:var(--mono);font-size:13px;color:var(--accent)">node_modules</code>. Works offline.</p>
+
+  <div class="stack-grid reveal">
+    <div class="stack-item">
+      <div class="stack-item-icon">🧱</div>
+      <div class="stack-item-name">HTML5</div>
+      <div class="stack-item-role">Structure</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-item-icon">🎨</div>
+      <div class="stack-item-name">CSS3 Grid</div>
+      <div class="stack-item-role">Layout + theming</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-item-icon">⚡</div>
+      <div class="stack-item-name">Vanilla JS (ES6+)</div>
+      <div class="stack-item-role">Projection logic</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-item-icon">📊</div>
+      <div class="stack-item-name">Chart.js</div>
+      <div class="stack-item-role">Visualizations</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-item-icon">💾</div>
+      <div class="stack-item-name">LocalStorage</div>
+      <div class="stack-item-role">Persistence</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-item-icon">🧠</div>
+      <div class="stack-item-name">Claude API</div>
+      <div class="stack-item-role">Spend insights (optional)</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-item-icon">📄</div>
+      <div class="stack-item-name">jsPDF</div>
+      <div class="stack-item-role">Report export</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-item-icon">🖼️</div>
+      <div class="stack-item-name">html2canvas</div>
+      <div class="stack-item-role">Snapshot generation</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SETUP -->
+<section class="section" id="setup">
+  <p class="section-label reveal">Setup</p>
+  <h2 class="section-title reveal">Running it<br>takes <em>seconds.</em></h2>
+
+  <div class="setup-steps reveal">
+    <div>
+      <div class="setup-step-label">Step 1</div>
+      <div class="setup-step-title">Clone or download</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">terminal</span>
+          <span class="code-lang">bash</span>
+        </div>
+        <pre><span class="c-dim">$</span> git clone https://github.com/MAHAYAVANSHI2904/Nexus-Fin.git
+<span class="c-dim">$</span> cd Nexus-Fin</pre>
+      </div>
+    </div>
+    <div>
+      <div class="setup-step-label">Step 2</div>
+      <div class="setup-step-title">Open in browser</div>
+      <div class="setup-step-desc">No install, no server. Drag <code style="font-family:var(--mono);font-size:12px;color:var(--accent)">index.html</code> into Chrome or Firefox — or double-click it.</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">terminal</span>
+          <span class="code-lang">bash</span>
+        </div>
+        <pre><span class="c-dim">$</span> open index.html   <span class="c-dim"># macOS</span>
+<span class="c-dim">$</span> start index.html  <span class="c-dim"># Windows</span></pre>
+      </div>
+    </div>
+    <div>
+      <div class="setup-step-label">Step 3 (optional)</div>
+      <div class="setup-step-title">Enable AI spend analysis</div>
+      <div class="setup-step-desc">Get a free key from <code style="font-family:var(--mono);font-size:12px;color:var(--accent)">console.anthropic.com</code> and paste it into the in-app Settings panel. Stored only in your browser's localStorage — never sent to any server but Anthropic's.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECURITY -->
+<section class="section">
+  <p class="section-label reveal">Privacy & Security</p>
+  <h2 class="section-title reveal">No server.<br>No <em>account.</em></h2>
+
+  <div class="security-grid reveal">
+    <div class="security-item">
+      <div class="security-icon">🔒</div>
+      <div class="security-text">
+        <h4>Fully Client-Side</h4>
+        <p>All financial data — income, expenses, investments, goals — lives only in your browser's localStorage. Nothing is uploaded.</p>
+      </div>
+    </div>
+    <div class="security-item">
+      <div class="security-icon">🙈</div>
+      <div class="security-text">
+        <h4>No Tracking</h4>
+        <p>No analytics, no cookies, no third-party trackers. The app doesn't know who you are.</p>
+      </div>
+    </div>
+    <div class="security-item">
+      <div class="security-icon">🧠</div>
+      <div class="security-text">
+        <h4>AI Sees Categories, Not Transactions</h4>
+        <p>If AI analysis is enabled, only anonymized category totals are sent — never line-item transactions or account details.</p>
+      </div>
+    </div>
+    <div class="security-item">
+      <div class="security-icon">🗑️</div>
+      <div class="security-text">
+        <h4>One-Click Reset</h4>
+        <p>Settings → Reset wipes all stored data instantly. No account to delete, no data to request back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ROADMAP -->
+<section class="section">
+  <p class="section-label reveal">Roadmap</p>
+  <h2 class="section-title reveal">What's <em>next.</em></h2>
+
+  <div class="roadmap-list reveal">
+    <div class="roadmap-item">
+      <div class="roadmap-checkbox"></div>
+      <div class="roadmap-text">CSV import for bank statements — auto-categorize transactions</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-checkbox"></div>
+      <div class="roadmap-text">Indian mutual fund NAV integration via AMFI API</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-checkbox"></div>
+      <div class="roadmap-text">Tax projection module — Old vs New regime comparison</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-checkbox"></div>
+      <div class="roadmap-text">PWA support — installable, works fully offline</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-checkbox"></div>
+      <div class="roadmap-text">Multi-currency support for NRI users</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AUTHOR -->
+<section class="section">
+  <div class="author-card reveal">
+    <div>
+      <div class="author-label">Built by</div>
+      <div class="author-name">Chirag Mahayavanshi</div>
+      <div class="author-title">Senior Finance Executive · ACCA Finalist (9/13)<br>Masters in International Accounting & Finance · Mumbai</div>
+      <div class="author-links">
+        <a href="https://www.linkedin.com/in/mahayavanshic/" target="_blank" class="author-link">LinkedIn →</a>
+        <a href="https://github.com/MAHAYAVANSHI2904" target="_blank" class="author-link">GitHub →</a>
+        <a href="https://instagram.com/aiassets" target="_blank" class="author-link">@AiAndAssets →</a>
+        <a href="https://mahayavanshi2904.github.io/Chirag.portfolio/" target="_blank" class="author-link">Portfolio →</a>
+      </div>
+    </div>
+    <div class="author-badge">
+      <div class="ab-item">Finance + AI Builder</div>
+      <div class="ab-item">Wealth Planning Logic</div>
+      <div class="ab-item">Client-Side Architecture</div>
+      <div class="ab-item">JS · Chart.js · Claude API</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Nexus-Fin &mdash; Built by Chirag Mahayavanshi · Mumbai, India
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
