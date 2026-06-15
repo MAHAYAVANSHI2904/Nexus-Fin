@@ -4,15 +4,15 @@
 
 ### Personal Finance SaaS — AI-Powered Wealth Planning Engine
 
-[![Stack](https://img.shields.io/badge/Stack-HTML%20%2F%20CSS%20%2F%20JS-blue?style=flat)](https://github.com/MAHAYAVANSHI2904/Nexus-Fin)
-[![Finance](https://img.shields.io/badge/Domain-Personal%20Finance-green?style=flat)](#)
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat)](#)
+[![Frontend](https://img.shields.io/badge/Frontend-HTML%20%2F%20CSS%20%2F%20JS-blue?style=flat)](https://github.com/MAHAYAVANSHI2904/Nexus-Fin)
+[![Backend](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![AI](https://img.shields.io/badge/AI-Groq%20LLaMA%203.3-F55036?style=flat)](https://groq.com)
+[![Sheets](https://img.shields.io/badge/Storage-Google%20Sheets-34A853?style=flat&logo=googlesheets&logoColor=white)](https://www.google.com/sheets/about/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat)](LICENSE)
 
-**A client-side personal finance dashboard with a 10-year wealth projection engine and AI-powered spend analysis**  
-No backend. No signup. Your data stays in your browser.
+**A personal finance dashboard with AI-powered budget analysis and a downloadable wealth report — built on a lightweight FastAPI backend**
 
-[Live Demo](#) · [Features](#features) · [How It Works](#how-it-works)
+[Features](#features) · [Architecture](#architecture) · [Setup](#setup)
 
 </div>
 
@@ -20,66 +20,60 @@ No backend. No signup. Your data stays in your browser.
 
 ## Overview
 
-Nexus-Fin is a personal finance SaaS prototype built to solve a specific problem: most budgeting apps show you *where your money went* but not *where it will be* in 5 or 10 years.
+Nexus-Fin helps users map their income, expenses, and savings into a clear budget breakdown — then sends that breakdown to an LLM for personalized financial analysis, and exports the whole thing as a styled PDF report.
 
-Nexus-Fin combines a relational data model (income, expenses, investments, goals) with a compound-growth projection engine that maps your current financial behavior to a long-term wealth curve.
+The frontend is a single-page HTML/CSS/JS app. The backend is a small FastAPI service that handles three jobs: log budget data to Google Sheets, get AI analysis from Groq, and generate a PDF report.
 
 ---
 
 ## Features
 
-### Wealth Projection Engine
-- 10-year net worth projection using compound growth modeling
-- Accounts for income growth rate, expense inflation, and investment return assumptions
-- Goal-tracking: maps progress to specific financial milestones (emergency fund, home down payment, retirement corpus)
-- Monte Carlo-style sensitivity analysis: see best/worst/base case curves
+### Budget Input & Breakdown
+- Structured input across three categories: Essentials (rent, bills, groceries, commute), Wealth (SIPs, bank savings, emergency fund), Lifestyle (dining, shopping, subscriptions)
+- Auto-calculated totals and surplus
+- City-tier aware (Tier 1/2/3) for context-appropriate suggestions
 
-### Expense Intelligence
-- Category-level spend breakdown (Housing, Food, Transport, Subscriptions, etc.)
-- Month-over-month delta tracking
-- AI-powered spend anomaly detection — flags categories trending above 3-month average
-- Savings rate calculator with benchmark comparison (50/30/20 rule)
+### AI Financial Analysis
+- Sends the full budget blueprint to Groq's LLaMA 3.3 70B model
+- Structured output: Risk Analysis, Expense Optimization, Tax Strategy, Asset Allocation, Portfolio Suggestions, Peer Benchmarking, FIRE Planning, and a 12-month action plan
+- Graceful fallback with rule-based suggestions if the AI call fails — the app never breaks
 
-### Investment Tracker
-- Multi-asset portfolio view: Equity, Debt, Gold, Real Estate, Crypto
-- XIRR-based return calculation per asset class
-- Asset allocation heatmap vs target allocation
-- SIP tracker with maturity projections
+### Google Sheets Logging
+- Every submission logs to two sheets: `Login_Logs` (who, when) and `Budget_Data` (full breakdown)
+- Sheets auto-created on first run if they don't exist
+- Useful for tracking usage and building a dataset over time
 
-### Dashboard
-- Single-page app — zero page reloads
-- Dark-mode first, responsive layout
-- Exportable reports (PDF snapshot)
-- Local storage persistence — all data stays in browser
+### PDF Report Export
+- Generates a styled, dark-themed PDF with the full budget table and AI analysis
+- One-click download, named after the user
 
 ---
 
-## How It Works
+## Architecture
 
 ```
-User Input (Income / Expenses / Investments / Goals)
-              │
-              ▼
-    Relational Data Model
-    ┌─────────────────────────────┐
-    │  income[]                   │
-    │  expenses[] → categories    │
-    │  investments[] → asset_type │
-    │  goals[] → target_date      │
-    └─────────────────────────────┘
-              │
-              ▼
-    Projection Engine
-    - Monthly surplus = income - expenses
-    - Invested surplus compounds at user-defined rate
-    - Goal gap = target_corpus - projected_value_at_date
-              │
-              ▼
-    Visualization Layer
-    - Net worth curve (Chart.js)
-    - Category waterfall
-    - Goal progress rings
+┌─────────────────┐         ┌──────────────────┐
+│  Frontend        │  POST   │  FastAPI Backend  │
+│  (index.html)    │ ──────► │  (backend/main.py)│
+│  Budget Form     │         │                   │
+└─────────────────┘         └─────────┬─────────┘
+                                        │
+                    ┌───────────────────┼───────────────────┐
+                    ▼                   ▼                   ▼
+            ┌───────────────┐  ┌───────────────┐  ┌──────────────┐
+            │ Google Sheets  │  │  Groq API      │  │  FPDF        │
+            │ (data log)     │  │  (AI analysis) │  │ (PDF export) │
+            └───────────────┘  └───────────────┘  └──────────────┘
 ```
+
+### Endpoints
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/health` | GET | Health check |
+| `/api/budget` | POST | Log budget submission to Google Sheets |
+| `/api/analyze` | POST | Get AI financial analysis from Groq |
+| `/api/pdf` | POST | Generate downloadable PDF report |
 
 ---
 
@@ -87,75 +81,68 @@ User Input (Income / Expenses / Investments / Goals)
 
 | Layer | Technology |
 |---|---|
-| UI | Vanilla HTML5 + CSS3 (CSS Grid, Custom Properties) |
-| Logic | Vanilla JavaScript (ES6+, no framework) |
-| Charts | Chart.js |
-| Persistence | LocalStorage (relational schema via JSON) |
-| AI Analysis | Anthropic Claude API (spend anomaly + advice) |
-| Export | html2canvas + jsPDF |
-
-**Why no framework?** Nexus-Fin is intentionally dependency-light. The entire app ships as a single `index.html` — no build step, no `node_modules`, no deploy pipeline. Works offline.
-
----
-
-## Data Model
-
-```javascript
-// Core schema (stored in localStorage as JSON)
-{
-  income: [
-    { id, source, amount, frequency, start_date, growth_rate }
-  ],
-  expenses: [
-    { id, category, description, amount, frequency, is_essential }
-  ],
-  investments: [
-    { id, name, asset_type, current_value, monthly_sip, expected_return, start_date }
-  ],
-  goals: [
-    { id, name, target_amount, target_date, linked_investment_ids[], priority }
-  ],
-  settings: {
-    inflation_rate, risk_profile, currency, salary_growth_rate
-  }
-}
-```
+| Frontend | HTML5, CSS3, Vanilla JS |
+| Backend | FastAPI, Pydantic |
+| AI | Groq API — `llama-3.3-70b-versatile` |
+| Data Logging | Google Sheets via gspread |
+| PDF Generation | fpdf2 |
+| Server | Uvicorn |
 
 ---
 
 ## Setup
 
-No installation required. Open `index.html` in any modern browser.
+### Prerequisites
+- Python 3.10+
+- Groq API key (free tier works): [console.groq.com](https://console.groq.com)
+- Google Cloud service account with Sheets API access (optional, for data logging)
+
+### 1. Clone
 
 ```bash
 git clone https://github.com/MAHAYAVANSHI2904/Nexus-Fin.git
 cd Nexus-Fin
-open index.html   # macOS
-# or just drag index.html into Chrome/Firefox
 ```
 
-For AI-powered spend analysis (optional):
-- Get a free API key from [console.anthropic.com](https://console.anthropic.com)
-- Enter it in the Settings panel inside the app
-- Key is stored only in your browser's localStorage
+### 2. Backend setup
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp ../.env.example .env
+```
+
+```env
+GROQ_API_KEY=gsk_your_key_here
+SHEET_URL=https://docs.google.com/spreadsheets/d/your_sheet_id/edit
+GOOGLE_SHEETS_CREDENTIALS={"type":"service_account",...}
+```
+
+> **Note:** `SHEET_URL` and `GOOGLE_SHEETS_CREDENTIALS` are optional. Without them, budget logging is skipped but AI analysis and PDF export still work.
+
+### 3. Run the backend
+
+```bash
+uvicorn main:app --reload --port 8000
+```
+
+### 4. Open the frontend
+
+Open `index.html` in your browser. Update the API base URL inside the JS to point to `http://localhost:8000` if running locally.
 
 ---
 
-## Roadmap
+## Security
 
-- [ ] CSV import (bank statements)
-- [ ] Indian mutual fund NAV integration (AMFI API)
-- [ ] Tax projection module (Old vs New regime comparison)
-- [ ] PWA support (offline + installable)
-- [ ] Multi-currency support
-
----
-
-## Security & Privacy
-
-- **No server. No database. No account.** All data lives in your browser.
-- AI analysis (if enabled) sends only anonymized spend categories to Claude API — never raw transactions
-- Clear data anytime via Settings → Reset
+- No API keys, credentials, or sheet IDs committed to this repo
+- All secrets loaded via environment variables — see `.env.example`
+- `.gitignore` covers `.env`, `credentials.json`, and `*.pem`
+- AI analysis includes a graceful fallback path — app stays functional even if the Groq API key is missing or the call fails
 
 ---
 
@@ -165,4 +152,4 @@ For AI-powered spend analysis (optional):
 Senior Finance Executive · ACCA Finalist · Finance + AI Builder  
 Mumbai, India
 
-[LinkedIn](https://linkedin.com/in/chiragmahayavanshi) · [GitHub](https://github.com/MAHAYAVANSHI2904) · [Instagram @AiAndAssets](https://instagram.com/aiassets)
+[LinkedIn](https://www.linkedin.com/in/mahayavanshic/) · [GitHub](https://github.com/MAHAYAVANSHI2904)
